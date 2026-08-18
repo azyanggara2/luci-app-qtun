@@ -5,9 +5,9 @@ LuCI interface untuk Q-Tunneling dengan dukungan:
 - ZiVPN (UDP)
 - Clash / Mihomo
 - Q-Load Core
-- SSH *(Coming Soon)*
-- SSH WebSocket (SSH-WS) *(Coming Soon)*
-- SSH SSL (SSH-SSL) *(Coming Soon)*
+- SSH (Coming Soon)
+- SSH WebSocket (SSH-WS) (Coming Soon)
+- SSH SSL (SSH-SSL) (Coming Soon)
 
 Dirancang untuk OpenWrt dengan auto-download core saat build dan integrasi penuh ke LuCI.
 
@@ -30,63 +30,58 @@ Dirancang untuk OpenWrt dengan auto-download core saat build dan integrasi penuh
 
 ---
 
-## 📦 Instalasi Package (.ipk / .apk)
+## 📦 Instalasi
 
-### Metode SCP
+### 🧩 Compatibility / Support
+
+QTUN dirancang untuk OpenWrt dengan dukungan:
+
+- OpenWrt 21.02
+- OpenWrt 22.03
+- OpenWrt 23.05
+- OpenWrt 24.10
+
+Arsitektur yang tersedia:
+
+- x86_64 / AMD64
+- ARM64 / aarch64
+  - aarch64_cortex-a53
+  - aarch64_cortex-a55
+  - aarch64_generic
+- ARMv7 / ARM
+  - arm_cortex-a7_neon-vfpv4
+  - arm_cortex-a9
+
+### ⚡ Auto Installer — Rekomendasi
+
+Cara paling mudah adalah menggunakan Smart Installer. Installer akan otomatis mendeteksi environment OpenWrt dan arsitektur perangkat, memilih package yang sesuai, mengunduh dan memvalidasi package, menginstal QTUN, mengaktifkan autoboot, menjalankan service, dan me-restart rpcd.
 
 ```bash
-scp luci-app-qtun.ipk root@192.168.1.1:/tmp/
-```
-```bash
-scp luci-app-qtun.apk root@192.168.1.1:/tmp/
+wget --no-check-certificate -O /tmp/install.sh "https://raw.githubusercontent.com/charudkelser/luci-app-qtun/master/install.sh" && chmod +x /tmp/install.sh && /tmp/install.sh
 ```
 
-### Install
+## 📦 Install Dependency Tambahan (Jika Diperlukan)
 
 ```bash
 opkg update
-opkg install /tmp/luci-app-qtun.ipk
-```
-```bash
-apk update
-apk add --allow-untrusted /tmp/luci-app-qtun.apk
-```
 
-### Restart LuCI
-
-```bash
-/etc/init.d/uhttpd restart
-```
-
-### Atau reboot
-
-```bash
-reboot
-```
-
----
-
-## 📦 Install Dependency Manual (jika diperlukan)
-
-```bash
-opkg update
-opkg install luci-compat bash curl ca-bundle ca-certificates jq
-```
-```bash
-apk update
-apk add luci-compat bash curl ca-bundle ca-certificates jq
+opkg install luci-compat
+opkg install bash
+opkg install curl
+opkg install ca-bundle
+opkg install ca-certificates
+opkg install jq
+opkg install coreutils-nohup
 ```
 
 ---
 
 ## 🚀 Fitur Utama
 
-### Auto Download Core
+- Auto Download Core
 - Mihomo Core
 - Q-Load Core
 - ZiVPN Core
-
-### LuCI Features
 - LuCI Web UI
 - Multi tunnel support
 - Config management
@@ -99,7 +94,12 @@ apk add luci-compat bash curl ca-bundle ca-certificates jq
 
 - AMD64 / x86_64
 - ARM64 / aarch64
+  - aarch64_cortex-a53
+  - aarch64_cortex-a55
+  - aarch64_generic
 - ARM / armv7
+  - arm_cortex-a7_neon-vfpv4
+  - arm_cortex-a9
 
 ---
 
@@ -123,20 +123,34 @@ logread -f
 /etc/qtun/action/qtun.sh restart
 ```
 
+### Cek status autoboot
+
+```bash
+/etc/init.d/qtun_autoboot status
+```
+
+### Restart LuCI / RPCD
+
+```bash
+/etc/init.d/rpcd restart
+```
+
 ---
 
 ## ❌ Uninstall
 
 ```bash
 opkg remove luci-app-qtun
-rm -rf /etc/qtun
+rm -rf /etc/qtun /etc/config/qtun /etc/init.d/qtun_autoboot
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/
+/etc/init.d/rpcd restart
 ```
 
 ---
 
 ## 🔖 Release
 
-Build release tersedia di tab **Releases**:
+Build release tersedia di tab Releases:
 
 https://github.com/QcomWrt/luci-app-qtun/releases
 
@@ -144,15 +158,13 @@ https://github.com/QcomWrt/luci-app-qtun/releases
 
 ## 📜 License
 
-* [MIT License](https://github.com/QcomWrt/luci-app-qtun/blob/master/LICENSE)
+MIT License
 
-## Core / Binaries
+### Core / Binaries
 
-* Zivpn [Zivpn](https://github.com/zahidbd2/udp-zivpn) by [zahidbd2](https://github.com/zahidbd2)
-
-* Q-load [Q-load](https://github.com/QcomWrt/Q-load) by [QcomWrt](https://github.com/QcomWrt)
-
-* Clash [Mihomo](https://github.com/MetaCubeX/mihomo) by [MetaCubeX](https://github.com/MetaCubeX)
+- ZiVPN by zahidbd2
+- Q-load by QcomWrt
+- Clash / Mihomo by MetaCubeX
 
 ---
 
